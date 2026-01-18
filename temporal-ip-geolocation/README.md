@@ -1,5 +1,8 @@
 # Temporal IP Geolocation
 
+<img width="2984" height="687" alt="image" src="https://github.com/user-attachments/assets/52d7ce2e-26df-42f6-a06e-40144619397b" />
+
+
 A simple Temporal workflow application for IP geolocation.
 
 ## Prerequisites
