@@ -24,13 +24,15 @@ go run worker/main.go
 ### 3. Run Workflow
 
 ```bash
-go run client/main.go <ip-address>
+go run client/main.go <username>
 ```
 
 Example:
 ```bash
-go run client/main.go 8.8.8.8
+go run client/main.go SomeUserName
 ```
+
+The workflow will automatically fetch your IP address and location information.
 
 ## URLs
 
