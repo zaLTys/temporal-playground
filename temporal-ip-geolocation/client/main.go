@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"temporal-ip-geolocation/iplocate"
 
@@ -18,7 +19,11 @@ func main() {
 	}
 	name := os.Args[1]
 
-	c, err := client.Dial(client.Options{})
+	// Match the worker configuration
+	c, err := client.Dial(client.Options{
+		Namespace: "default",
+		HostPort:  "localhost:7234",
+	})
 	if err != nil {
 		log.Fatalln("Unable to create client", err)
 	}
@@ -31,13 +36,18 @@ func main() {
 		TaskQueue: iplocate.TaskQueueName,
 	}
 
-	we, err := c.ExecuteWorkflow(context.Background(), options, iplocate.GetAddressFromIP, name)
+	// Create a context with timeout for workflow execution
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+	defer cancel()
+
+	we, err := c.ExecuteWorkflow(ctx, options, iplocate.GetAddressFromIP, name)
 	if err != nil {
 		log.Fatalln("Unable to execute workflow", err)
 	}
 
 	var result string
-	err = we.Get(context.Background(), &result)
+	// Use the same context for getting the result
+	err = we.Get(ctx, &result)
 	if err != nil {
 		log.Fatalln("Unable get workflow result", err)
 	}
